@@ -1,0 +1,7 @@
+{
+  "name": "kitchenOrganicer",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
