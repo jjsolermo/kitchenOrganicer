@@ -34,7 +34,6 @@ export class CreateFoodPage implements OnInit {
 
    validate(){
     const datepipe: DatePipe = new DatePipe('en-US')
-    console.log(this.foodForm.value.name)
     if(this.foodForm.value.expiration && datepipe.transform(new Date(this.foodForm.value.expiration),'dd-MMM-YYYY') < datepipe.transform(new Date(),'dd-MMM-YYYY')){
        this.presentToast('La caducidad es menor al día de hoy.');
     }else if(this.foodForm.value.buy && datepipe.transform(new Date(this.foodForm.value.buy),'dd-MMM-YYYY') < datepipe.transform(new Date(),'dd-MMM-YYYY')){
@@ -47,7 +46,8 @@ export class CreateFoodPage implements OnInit {
   async presentToast(msn:string) {
     const toast = await this.toastController.create({
       message: msn,
-      duration: 2000
+      duration: 2000,
+      color: 'dark',
     });
     toast.present();
   }
