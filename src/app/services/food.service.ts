@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { initializeApp } from '@angular/fire/app';
-import { collection, collectionData, doc, docData, Firestore, getDocs, getFirestore, setDoc } from '@angular/fire/firestore';
+import { collection, collectionData, doc, docData, Firestore, getDocs, getFirestore, query, setDoc, where } from '@angular/fire/firestore';
 import { FormGroup } from '@angular/forms';
 import { map } from '@firebase/util';
 import { ToastController } from '@ionic/angular';
@@ -12,6 +12,7 @@ import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
+
 export class FoodService {
   constructor(private firestore:Firestore,public toastController: ToastController) {
     const app = initializeApp(environment.firebase);
@@ -32,28 +33,28 @@ export class FoodService {
     toast.present();
   }
 
-   async getFoods() : Promise<Food[]>{
+   async getFoods() : Promise<Food[]>{   
+    var d = new Date();
     let foodList:Array<Food> = [];
-    const querySnapshot = await getDocs(collection(this.firestore, "food"));
+    const querySnapshot = await getDocs(query(collection(this.firestore, "food"),where('expiration', '>=', this.sumarDias(d, 3))));
     querySnapshot.forEach((doc) => {
       var food:Food = {
         uid: doc.id,
         name: doc.data().name,
         description: doc.data().description,
         qty: doc.data().qty,
-        caducity: doc.data().caducity,
+        expiration: doc.data().expiration,
         buy: doc.data().buy,
         place: doc.data().place
       }
       foodList.push(food);
     });
-
+    console.log(foodList)
     return foodList;
   }
-  //const q = query(collection(db, "cities"), where("capital", "==", true));
   validateFood(foodForm:FormGroup){
-    let food:Food;
     const datepipe: DatePipe = new DatePipe('en-US');
+    let food:Food;
     let validateValue:boolean = true;
     if(foodForm.value.expiration && datepipe.transform(new Date(foodForm.value.expiration),'dd-MMM-YYYY') < datepipe.transform(new Date(),'dd-MMM-YYYY')){
        this.presentToast('La caducidad es menor al día de hoy.');
@@ -82,5 +83,12 @@ export class FoodService {
    } 
    
   }
+
+  /* Función que suma o resta días a una fecha, si el parámetro
+   días es negativo restará los días*/
+  sumarDias(fecha, dias){
+  fecha.setDate(fecha.getDate() + dias);
+  return fecha;
+}
 
 }

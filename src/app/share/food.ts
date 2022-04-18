@@ -3,7 +3,7 @@ export interface Food {
     name: string;
     description: string;
     qty: number;
-    caducity: Date;
+    expiration: Date;
     buy:Date;
     place:string;
  }

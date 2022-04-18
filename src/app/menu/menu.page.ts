@@ -23,7 +23,7 @@ export class MenuPage implements OnInit {
           name: item.name,
           description: item.description,
           qty: item.qty,
-          caducity: item.caducity,
+          expiration: item.expiration,
           buy: item.buy,
           place: item.place
         }
