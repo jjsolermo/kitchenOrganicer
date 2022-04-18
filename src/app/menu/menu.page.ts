@@ -16,13 +16,22 @@ export class MenuPage implements OnInit {
   constructor(private menuController:MenuController,private router:Router,private foodService:FoodService) { }
 
   ngOnInit() {
-    this.foodList = this.foodService.getFoods();
-    this.foodList.then((food) => {
-      console.log(fooo)
-      food.map( food => food)
-    })
+    this.foodService.getFoods().then((food)=>{
+      food.forEach((item)=>{
+        var food:Food = {
+          uid: item.uid,
+          name: item.name,
+          description: item.description,
+          qty: item.qty,
+          caducity: item.caducity,
+          buy: item.buy,
+          place: item.place
+        }
+        this.foods.push(food);
+      } )  
+    });
   }
-
+  //const q = query(collection(db, "cities"), where("capital", "==", true));
   openMenu(){
     //this.menuController.open()
   }

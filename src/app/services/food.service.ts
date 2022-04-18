@@ -1,18 +1,22 @@
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
-import { collection, collectionData, doc, docData, Firestore, getDocs, setDoc } from '@angular/fire/firestore';
+import { initializeApp } from '@angular/fire/app';
+import { collection, collectionData, doc, docData, Firestore, getDocs, getFirestore, setDoc } from '@angular/fire/firestore';
 import { FormGroup } from '@angular/forms';
 import { map } from '@firebase/util';
 import { ToastController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { Food } from '../share/food';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FoodService {
-
-  constructor(private firestore:Firestore,public toastController: ToastController) { }
+  constructor(private firestore:Firestore,public toastController: ToastController) {
+    const app = initializeApp(environment.firebase);
+    const db = getFirestore(app);
+   }
 
   createFood(food: Food): Promise<void> {
     const document = doc(collection(this.firestore, 'food'));
@@ -28,7 +32,7 @@ export class FoodService {
     toast.present();
   }
 
-  async getFoods() : Promise<Array<Food>>{
+   async getFoods() : Promise<Food[]>{
     let foodList:Array<Food> = [];
     const querySnapshot = await getDocs(collection(this.firestore, "food"));
     querySnapshot.forEach((doc) => {
@@ -46,7 +50,7 @@ export class FoodService {
 
     return foodList;
   }
-
+  //const q = query(collection(db, "cities"), where("capital", "==", true));
   validateFood(foodForm:FormGroup){
     let food:Food;
     const datepipe: DatePipe = new DatePipe('en-US');
