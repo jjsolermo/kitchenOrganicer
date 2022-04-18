@@ -36,7 +36,11 @@ const routes: Routes = [
   {
     path: 'create-food',
     loadChildren: () => import('./create-food/create-food.module').then( m => m.CreateFoodPageModule)
+  },  {
+    path: 'edit-food',
+    loadChildren: () => import('./edit-food/edit-food.module').then( m => m.EditFoodPageModule)
   },
+
 ];
 
 @NgModule({

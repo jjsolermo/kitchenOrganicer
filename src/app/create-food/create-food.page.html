@@ -6,8 +6,8 @@
 </ion-header>
 
 <ion-content>
-  <div class="container">
-    <form (ngSubmit)="validate()" [formGroup]="foodForm" style="width: 92%;">
+  <div class="container" style="display: flex;justify-content: center;align-items: center;">
+    <form (ngSubmit)="validate()" [formGroup]="foodForm" style="width: 100%;">
       <ion-item>
         <ion-label clearInput position="floating">Nombre Alimento</ion-label>
         <ion-input [(ngModel)]="name" formControlName="name"></ion-input>
@@ -21,17 +21,21 @@
         <ion-input [(ngModel)]="qty" formControlName="qty" type="number"></ion-input>
       </ion-item>
       <div class="row" style="margin-top: 1rem;">
-        <ion-label style="padding: 1rem;" position="floating">Caducidad</ion-label>
+        <ion-label style="margin-left: 4%;" position="floating">Caducidad</ion-label>
         <ion-item>
           <ion-input [(ngModel)]="expiration" formControlName="expiration" type="date"></ion-input>
         </ion-item>
       </div>
       <div class="row" style="margin-top: 1rem;">
-        <ion-label style="padding: 1rem;" position="floating">Comprado</ion-label>
+        <ion-label style="margin-left: 4%;" position="floating">Comprado</ion-label>
         <ion-item>
           <ion-input [(ngModel)]="buy" formControlName="buy" type="date"></ion-input>
         </ion-item>
       </div>
+      <ion-item>
+        <ion-label clearInput position="floating">Precio</ion-label>
+        <ion-input [(ngModel)]="price" formControlName="price" type="number"></ion-input>
+      </ion-item>
       <ion-item style="margin-top: 1rem;">
         <ion-label>Lugar</ion-label>
           <ion-select value="defautl" [(ngModel)]="place" formControlName="place">
@@ -41,9 +45,9 @@
           <ion-select-option value="otros">Otros</ion-select-option>
         </ion-select>
       </ion-item>
-      <div class="row" style="padding: 0.5rem;position: absolute;">
-        <ion-button style="margin-top: 0.5rem;width: 9rem;" type="submit"  color="secondary">Añadir Comida</ion-button>
-        <ion-button style="margin-top: 0.5rem;width: 9rem;margin-left: 3rem;" type="button"  color="danger" (click)="cancel()">Cancelar</ion-button>
+      <div class="row" style="width: 100%;">
+        <ion-button style="margin-top: 7%;" type="submit" expand="block" color="secondary">Añadir Comida</ion-button>
+        <ion-button style="margin-top: 8%;" expand="block" type="button"  color="danger" (click)="cancel()">Cancelar</ion-button>
       </div>
   </form>
   </div>

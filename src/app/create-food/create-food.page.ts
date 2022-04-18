@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Food } from '../share/food';
-import { DatePipe } from '@angular/common';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastController } from '@ionic/angular';
+import { FoodService } from '../services/food.service';
 
 @Component({
   selector: 'app-create-food',
@@ -13,41 +12,41 @@ import { ToastController } from '@ionic/angular';
 export class CreateFoodPage implements OnInit {
   
   foodForm:FormGroup;
-  food:Food;
 
-  constructor(private router : Router,public toastController: ToastController) {
+  constructor(private router : Router,public toastController: ToastController,private foodService:FoodService) {
    }
   ngOnInit() {
     this.foodForm = new FormGroup({
-      name: new FormControl(),
+      name: new FormControl(Validators.required),
       descript:new FormControl(),
-      qty:new FormControl(),
+      qty:new FormControl(Validators.required),
       expiration:new FormControl(),
-      place:new FormControl(),
+      place:new FormControl(Validators.required),
       buy:new FormControl(),
+      price: new FormControl(),
   });
  }
-
   back(){
     this.router.navigateByUrl('/menu',{ replaceUrl: true })
   }
 
    validate(){
-    const datepipe: DatePipe = new DatePipe('en-US')
-    console.log(this.foodForm.value.name)
-    if(this.foodForm.value.expiration && datepipe.transform(new Date(this.foodForm.value.expiration),'dd-MMM-YYYY') < datepipe.transform(new Date(),'dd-MMM-YYYY')){
-       this.presentToast('La caducidad es menor al día de hoy.');
-    }else if(this.foodForm.value.buy && datepipe.transform(new Date(this.foodForm.value.buy),'dd-MMM-YYYY') < datepipe.transform(new Date(),'dd-MMM-YYYY')){
-      this.presentToast('La compra es menor al día de hoy.');
+    let result =  this.foodService.createFood(this.foodService.validateFood(this.foodForm));
+    if(result !== undefined){
+      this.presentToast('Comida guardada');
+      this.clearForm();
+    }
+   } 
+   
+   clearForm(){
+     this.foodForm.reset();
    }
-    
-    //f(this.foodForm.value);
-  }
-
+  
   async presentToast(msn:string) {
     const toast = await this.toastController.create({
       message: msn,
-      duration: 2000
+      duration: 2000,
+      color: 'success',
     });
     toast.present();
   }
