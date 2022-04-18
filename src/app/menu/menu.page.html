@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Menu Principal</ion-title>
-    <!-- Hamburger --><ion-buttons slot="start">
+    <ion-buttons slot="start">
       <ion-menu-button autoHide="false" (click)="openMenu()"></ion-menu-button>
     </ion-buttons>
     
@@ -15,7 +15,7 @@
     <ion-list-header> CADUCAN PRONTO </ion-list-header>
     <ion-item *ngFor="let food of foods">
       <label>{{food.name}}</label>
-      <label style="margin-left: auto;">{{food.expiration}}</label>
+      <label style="margin-left: auto;">{{food.expiration }}</label>
     </ion-item>
   </ion-list>
 </ion-content>

@@ -45,13 +45,12 @@ export class FoodService {
         name: doc.data().name,
         description: doc.data().description,
         qty: doc.data().qty,
-        expiration: doc.data().expiration,
+        expiration: new Date(doc.data().expiration),
         buy: doc.data().buy,
         place: doc.data().place
       }
       foodList.push(food);
     });
-    console.log(foodList)
     return foodList;
   }
 
@@ -60,11 +59,11 @@ export class FoodService {
    
     let food:Food;
     let validateValue:boolean = true;
-    if(foodForm.value.expiration && this.datepipe.transform(new Date(foodForm.value.expiration),'dd-MMM-YYYY') < this.datepipe.transform(new Date(),'dd-MMM-YYYY')){
+    if(foodForm.value.expiration && this.datepipe.transform(new Date(foodForm.value.expiration),'dd-MM-YYYY') < this.datepipe.transform(new Date(),'dd-MM-YYYY')){
        this.presentToast('La caducidad es menor al día de hoy.');
        validateValue = false;
     }
-    if(foodForm.value.buy && this.datepipe.transform(new Date(foodForm.value.buy),'dd-MMM-YYYY') < this.datepipe.transform(new Date(),'dd-MMM-YYYY')){
+    if(foodForm.value.buy && this.datepipe.transform(new Date(foodForm.value.buy),'dd-MM-YYYY') < this.datepipe.transform(new Date(),'dd-MM-YYYY')){
       this.presentToast('La compra es menor al día de hoy.');
       validateValue = false;
    }
