@@ -5,14 +5,12 @@ import { FormGroup } from '@angular/forms';
 import { map } from '@firebase/util';
 import { ToastController } from '@ionic/angular';
 import { Observable } from 'rxjs';
-import { Food } from './share/food';
+import { Food } from '../share/food';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FoodService {
-
-  foodList:Array<Food>
 
   constructor(private firestore:Firestore,public toastController: ToastController) { }
 
@@ -31,6 +29,7 @@ export class FoodService {
   }
 
   async getFoods() : Promise<Array<Food>>{
+    let foodList:Array<Food> = [];
     const querySnapshot = await getDocs(collection(this.firestore, "food"));
     querySnapshot.forEach((doc) => {
       var food:Food = {
@@ -42,10 +41,10 @@ export class FoodService {
         buy: doc.data().buy,
         place: doc.data().place
       }
-      this.foodList.push(food);
+      foodList.push(food);
     });
 
-    return this.foodList;
+    return foodList;
   }
 
   validateFood(foodForm:FormGroup){

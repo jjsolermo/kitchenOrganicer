@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastController } from '@ionic/angular';
-import { FoodService } from '../food.service';
+import { FoodService } from '../services/food.service';
 
 @Component({
   selector: 'app-create-food',
