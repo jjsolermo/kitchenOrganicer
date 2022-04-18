@@ -14,6 +14,8 @@ import { environment } from '../../environments/environment';
 })
 
 export class FoodService {
+
+   datepipe: DatePipe = new DatePipe('en-US');
   constructor(private firestore:Firestore,public toastController: ToastController) {
     const app = initializeApp(environment.firebase);
     const db = getFirestore(app);
@@ -34,9 +36,9 @@ export class FoodService {
   }
 
    async getFoods() : Promise<Food[]>{   
-    var d = new Date();
+    var d =  this.sumarDias(new Date(),3);
     let foodList:Array<Food> = [];
-    const querySnapshot = await getDocs(query(collection(this.firestore, "food"),where('expiration', '>=', this.sumarDias(d, 3))));
+    const querySnapshot = await getDocs(query(collection(this.firestore, "food"),where('expiration', '<=', d)));
     querySnapshot.forEach((doc) => {
       var food:Food = {
         uid: doc.id,
@@ -52,15 +54,17 @@ export class FoodService {
     console.log(foodList)
     return foodList;
   }
+
+
   validateFood(foodForm:FormGroup){
-    const datepipe: DatePipe = new DatePipe('en-US');
+   
     let food:Food;
     let validateValue:boolean = true;
-    if(foodForm.value.expiration && datepipe.transform(new Date(foodForm.value.expiration),'dd-MMM-YYYY') < datepipe.transform(new Date(),'dd-MMM-YYYY')){
+    if(foodForm.value.expiration && this.datepipe.transform(new Date(foodForm.value.expiration),'dd-MMM-YYYY') < this.datepipe.transform(new Date(),'dd-MMM-YYYY')){
        this.presentToast('La caducidad es menor al día de hoy.');
        validateValue = false;
     }
-    if(foodForm.value.buy && datepipe.transform(new Date(foodForm.value.buy),'dd-MMM-YYYY') < datepipe.transform(new Date(),'dd-MMM-YYYY')){
+    if(foodForm.value.buy && this.datepipe.transform(new Date(foodForm.value.buy),'dd-MMM-YYYY') < this.datepipe.transform(new Date(),'dd-MMM-YYYY')){
       this.presentToast('La compra es menor al día de hoy.');
       validateValue = false;
    }

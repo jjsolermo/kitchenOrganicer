@@ -31,6 +31,7 @@ export class CreateFoodPage implements OnInit {
   }
 
    validate(){
+    this.foodForm.value.expiration = new Date(this.foodForm.value.expiration);
     let result =  this.foodService.createFood(this.foodService.validateFood(this.foodForm));
     if(result !== undefined){
       this.presentToast('Comida guardada');
