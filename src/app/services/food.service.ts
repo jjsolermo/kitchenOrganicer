@@ -1,25 +1,20 @@
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
-import { initializeApp } from '@angular/fire/app';
-import { collection, collectionData, doc, docData, Firestore, getDocs, getFirestore, query, setDoc, where } from '@angular/fire/firestore';
+import { collection, collectionData, doc, docData, Firestore, getDocs, setDoc } from '@angular/fire/firestore';
 import { FormGroup } from '@angular/forms';
 import { map } from '@firebase/util';
 import { ToastController } from '@ionic/angular';
+import * as moment from 'moment';
 import { Observable } from 'rxjs';
 import { Food } from '../share/food';
-import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-
 export class FoodService {
+  [x: string]: any;
 
-   datepipe: DatePipe = new DatePipe('en-US');
-  constructor(private firestore:Firestore,public toastController: ToastController) {
-    const app = initializeApp(environment.firebase);
-    const db = getFirestore(app);
-   }
+  constructor(private firestore:Firestore,public toastController: ToastController) { }
 
   createFood(food: Food): Promise<void> {
     const document = doc(collection(this.firestore, 'food'));
@@ -35,35 +30,58 @@ export class FoodService {
     toast.present();
   }
 
-   async getFoods() : Promise<Food[]>{   
-    var d =  this.sumarDias(new Date(),3);
+  async getFoods() : Promise<Array<Food>>{
     let foodList:Array<Food> = [];
-    const querySnapshot = await getDocs(query(collection(this.firestore, "food"),where('expiration', '<=', d)));
+    const querySnapshot = await getDocs(collection(this.firestore, "food"));
     querySnapshot.forEach((doc) => {
       var food:Food = {
         uid: doc.id,
         name: doc.data().name,
         description: doc.data().description,
         qty: doc.data().qty,
-        expiration: new Date(doc.data().expiration),
+        expiration: doc.data().expiration,
         buy: doc.data().buy,
         place: doc.data().place
       }
       foodList.push(food);
     });
+
     return foodList;
   }
 
+  async getFoodsByExpiration() : Promise<Array<Food>>{
+    let today = new Date();
+    let foodList:Array<Food> = [];
+    const querySnapshot = await getDocs(collection(this.firestore, "food"));
+    querySnapshot.forEach((doc) => {
+      let dateToday =moment(this.addDays(today,5), 'MM-DD-YYYY'); 
+      let expirationDAte = moment(new Date(doc.data().expiration), 'MM-DD-YYYY')
+      if(expirationDAte <= dateToday){
+        var food:Food = {
+          uid: doc.id,
+          name: doc.data().name,
+          description: doc.data().description,
+          qty: doc.data().qty,
+          expiration: doc.data().expiration,
+          buy: doc.data().buy,
+          place: doc.data().place
+        }
+        foodList.push(food);
+      }   
+    });
+
+    return foodList;
+  }
 
   validateFood(foodForm:FormGroup){
-   
     let food:Food;
+    const datepipe: DatePipe = new DatePipe('en-US');
     let validateValue:boolean = true;
-    if(foodForm.value.expiration && this.datepipe.transform(new Date(foodForm.value.expiration),'dd-MM-YYYY') < this.datepipe.transform(new Date(),'dd-MM-YYYY')){
+    if(foodForm.value.expiration && datepipe.transform(new Date(foodForm.value.expiration),'dd-MMM-YYYY') < datepipe.transform(new Date(),'dd-MMM-YYYY')){
        this.presentToast('La caducidad es menor al día de hoy.');
        validateValue = false;
     }
-    if(foodForm.value.buy && this.datepipe.transform(new Date(foodForm.value.buy),'dd-MM-YYYY') < this.datepipe.transform(new Date(),'dd-MM-YYYY')){
+    if(foodForm.value.buy && datepipe.transform(new Date(foodForm.value.buy),'dd-MMM-YYYY') < datepipe.transform(new Date(),'dd-MMM-YYYY')){
       this.presentToast('La compra es menor al día de hoy.');
       validateValue = false;
    }
@@ -87,11 +105,14 @@ export class FoodService {
    
   }
 
-  /* Función que suma o resta días a una fecha, si el parámetro
-   días es negativo restará los días*/
-  sumarDias(fecha, dias){
-  fecha.setDate(fecha.getDate() + dias);
-  return fecha;
-}
+  addDays(date: Date, days: number): Date {
+    date.setDate(date.getDate() + days);
+    return date;
+  }
+   convertDate(inputFormat) {
+    function pad(s) { return (s < 10) ? '0' + s : s; }
+    var d = new Date(inputFormat)
+    return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('-')
+  }
 
 }

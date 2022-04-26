@@ -3,6 +3,8 @@ import { MenuController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { FoodService } from '../services/food.service';
 import { Food } from '../share/food';
+import { ModalController } from '@ionic/angular';
+import { ModalFoodComponent } from '../modal-food/modal-food.component';
 
 
 @Component({
@@ -13,25 +15,32 @@ import { Food } from '../share/food';
 export class MenuPage implements OnInit {
   foodList:Promise<Array<Food>>;
   foods:Array<Food> = [];
-  constructor(private menuController:MenuController,private router:Router,private foodService:FoodService) { }
+  visible = false;
+  constructor(private menuController:MenuController,private router:Router,private foodService:FoodService ,private modalCtrl: ModalController) { }
 
   ngOnInit() {
-    this.foodService.getFoods().then((food)=>{
-      food.forEach((item)=>{
-        var food:Food = {
-          uid: item.uid,
-          name: item.name,
-          description: item.description,
-          qty: item.qty,
-          expiration: item.expiration,
-          buy: item.buy,
-          place: item.place
-        }
-        this.foods.push(food);
-      } )  
-    });
+    this.foodList = this.foodService.getFoodsByExpiration();
+    this.foodList.then((food) => {
+      food.forEach(element => {
+        this.foods.push(element);
+      })
+     this.visible = true;
+    })
   }
-  //const q = query(collection(db, "cities"), where("capital", "==", true));
+
+  async openModal(food:Food) {
+    const modal = await this.modalCtrl.create({
+      component: ModalFoodComponent,
+      breakpoints: [0, 0.3, 0.5, 0.8],
+      initialBreakpoint: 0.5,
+      componentProps: {
+        food
+      },
+    });
+    await modal.present();
+  }
+
+
   openMenu(){
     //this.menuController.open()
   }

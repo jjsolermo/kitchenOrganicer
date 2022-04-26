@@ -31,12 +31,6 @@ export class CreateFoodPage implements OnInit {
   }
 
    validate(){
-     if(this.foodForm.value.expiration !== undefined || this.foodForm.value.expiration !== ''){
-      this.foodForm.value.expiration = new Date(this.foodForm.value.expiration);
-     }
-    if(this.foodForm.value.buy !== undefined || this.foodForm.value.buy !== ''){
-       this.foodForm.value.buy = new Date(this.foodForm.value.buy);
-    }
     let result =  this.foodService.createFood(this.foodService.validateFood(this.foodForm));
     if(result !== undefined){
       this.presentToast('Comida guardada');
@@ -46,6 +40,10 @@ export class CreateFoodPage implements OnInit {
    
    clearForm(){
      this.foodForm.reset();
+   }
+
+   cancel(){
+    this.router.navigateByUrl('/menu',{ replaceUrl: true })
    }
   
   async presentToast(msn:string) {
