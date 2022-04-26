@@ -1,0 +1,53 @@
+<ion-header >
+  <ion-toolbar id="headerFood">
+      <ion-title>Editar Alimento</ion-title>    
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="container" style="display: flex;justify-content: center;align-items: center;">
+    <form (ngSubmit)="validate()" [formGroup]="foodForm" style="width: 100%;">
+      <ion-item>
+        <ion-label clearInput position="floating">Nombre Alimento</ion-label>
+        <ion-input [(ngModel)]="name" formControlName="name"></ion-input>
+      </ion-item>
+      <ion-item> 
+        <ion-label clearInput position="floating">Descripción Alimento</ion-label>
+        <ion-input [(ngModel)]="descript" formControlName="descript"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label clearInput position="floating">Cantidad</ion-label>
+        <ion-input [(ngModel)]="qty" formControlName="qty" type="number"></ion-input>
+      </ion-item>
+      <div class="row" style="margin-top: 1rem;">
+        <ion-label style="margin-left: 4%;" position="floating">Caducidad</ion-label>
+        <ion-item>
+          <ion-input [(ngModel)]="expiration" formControlName="expiration" type="date"></ion-input>
+        </ion-item>
+      </div>
+      <div class="row" style="margin-top: 1rem;">
+        <ion-label style="margin-left: 4%;" position="floating">Comprado</ion-label>
+        <ion-item>
+          <ion-input [(ngModel)]="buy" formControlName="buy" type="date"></ion-input>
+        </ion-item>
+      </div>
+      <ion-item>
+        <ion-label clearInput position="floating">Precio</ion-label>
+        <ion-input [(ngModel)]="price" formControlName="price" type="number"></ion-input>
+      </ion-item>
+      <ion-item style="margin-top: 1rem;">
+        <ion-label>Lugar</ion-label>
+          <ion-select value="defautl" [(ngModel)]="place" formControlName="place">
+          <ion-select-option value="nevera">Nevera</ion-select-option>
+          <ion-select-option value="despensa">Despensa</ion-select-option>
+          <ion-select-option value="cangelador">Congelador</ion-select-option>
+          <ion-select-option value="otros">Otros</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <div class="row" style="width: 100%;">
+        <ion-button style="margin-top: 7%;" type="submit" expand="block" color="secondary">Añadir Comida</ion-button>
+        <ion-button style="margin-top: 8%;" expand="block" type="button"  color="danger" (click)="cancel()">Cancelar</ion-button>
+      </div>
+  </form>
+  </div>
+</ion-content>
