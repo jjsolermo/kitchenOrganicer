@@ -12,7 +12,6 @@ import { Food } from '../share/food';
   providedIn: 'root'
 })
 export class FoodService {
-  [x: string]: any;
 
   constructor(private firestore:Firestore,public toastController: ToastController) { }
 
@@ -28,6 +27,10 @@ export class FoodService {
       color: 'dark',
     });
     toast.present();
+  }
+
+  async  name(food:Food) {
+    
   }
 
   async getFoods() : Promise<Array<Food>>{

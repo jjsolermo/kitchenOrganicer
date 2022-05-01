@@ -1,3 +1,4 @@
+import { initializeApp } from 'firebase/app';
 export const environment = {
   firebase: {
     projectId: 'menuapp-8323f',
@@ -11,3 +12,5 @@ export const environment = {
   },
   production: true
 };
+
+export const app = initializeApp(environment.firebase);

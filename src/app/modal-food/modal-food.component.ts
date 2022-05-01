@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Food } from '../share/food';
 
 @Component({
   selector: 'app-modal-food',
@@ -7,8 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ModalFoodComponent implements OnInit {
 
+  food:Food;
+  name:string;
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.food);
+    this.name = this.food.name;
+  }
 
 }

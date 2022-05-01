@@ -3,6 +3,10 @@ import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastController } from '@ionic/angular';
 import { FoodService } from '../services/food.service';
+import { PlaceService } from '../services/place.service';
+import { Place } from '../share/place';
+
+
 
 @Component({
   selector: 'app-create-food',
@@ -12,10 +16,24 @@ import { FoodService } from '../services/food.service';
 export class CreateFoodPage implements OnInit {
   
   foodForm:FormGroup;
+  placeList:Promise<Array<Place>>;
+  places:Array<Place> = [];
 
-  constructor(private router : Router,public toastController: ToastController,private foodService:FoodService) {
+  constructor(
+    private router : Router,
+    public toastController: ToastController,
+    private placeService:PlaceService,
+    private foodService : FoodService) {
    }
+
   ngOnInit() {
+    this.placeList = this.placeService.getPlaces();
+    this.placeList.then((food) => {
+      food.forEach(element => {
+        this.places.push(element);
+      })
+    })
+
     this.foodForm = new FormGroup({
       name: new FormControl(Validators.required),
       descript:new FormControl(),

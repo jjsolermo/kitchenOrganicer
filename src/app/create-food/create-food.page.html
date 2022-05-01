@@ -39,10 +39,7 @@
       <ion-item style="margin-top: 1rem;">
         <ion-label>Lugar</ion-label>
           <ion-select value="defautl" [(ngModel)]="place" formControlName="place">
-          <ion-select-option value="nevera">Nevera</ion-select-option>
-          <ion-select-option value="despensa">Despensa</ion-select-option>
-          <ion-select-option value="cangelador">Congelador</ion-select-option>
-          <ion-select-option value="otros">Otros</ion-select-option>
+          <ion-select-option *ngFor="let place of places" value="{{place.key}}">{{place.value}}</ion-select-option>
         </ion-select>
       </ion-item>
       <div class="row" style="width: 100%;">
