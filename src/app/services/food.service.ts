@@ -1,19 +1,28 @@
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
-import { collection, collectionData, doc, docData, Firestore, getDocs, setDoc } from '@angular/fire/firestore';
+import { collection, collectionData, deleteDoc, doc, docData, Firestore, getDocs, setDoc } from '@angular/fire/firestore';
 import { FormGroup } from '@angular/forms';
 import { map } from '@firebase/util';
 import { ToastController } from '@ionic/angular';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
 import { Food } from '../share/food';
+import { app } from './../../environments/environment';
+import { getFirestore } from 'firebase/firestore'
+
+
+const db = getFirestore(app);
 
 @Injectable({
   providedIn: 'root'
 })
-export class FoodService {
 
+
+
+export class FoodService {
   constructor(private firestore:Firestore,public toastController: ToastController) { }
+
+
 
   createFood(food: Food): Promise<void> {
     const document = doc(collection(this.firestore, 'food'));
@@ -29,8 +38,14 @@ export class FoodService {
     toast.present();
   }
 
-  async  name(food:Food) {
-    
+  async  deleteFood (food:Food) {
+    try{
+      await deleteDoc(doc(db, "food", food.uid));
+      this.presentToast('Eliminado correctamente.');
+    } catch(error){
+      console.log('error in delete' + error)
+    }
+
   }
 
   async getFoods() : Promise<Array<Food>>{

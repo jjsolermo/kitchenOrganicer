@@ -16,6 +16,7 @@ export class MenuPage implements OnInit {
   foodList:Promise<Array<Food>>;
   foods:Array<Food> = [];
   visible = false;
+  modal = null;
   constructor(private menuController:MenuController,private router:Router,private foodService:FoodService ,private modalCtrl: ModalController) { }
 
   ngOnInit() {
@@ -29,15 +30,27 @@ export class MenuPage implements OnInit {
   }
 
   async openModal(food:Food) {
-    const modal = await this.modalCtrl.create({
+     this.modal = await this.modalCtrl.create({
       component: ModalFoodComponent,
       breakpoints: [0, 0.3, 0.5, 0.8],
       initialBreakpoint: 0.5,
       componentProps: {
         food
       },
+      
     });
-    await modal.present();
+    this.modal.onDidDismiss(data => {
+     console.log('dismiss');
+    });
+    await this.modal.present();
+  }
+
+  dismissModal() {
+    if (this.modal) {
+      this.modal.dismiss().then(() => {
+        this.modal = null;
+      });
+    }
   }
 
 
