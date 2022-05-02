@@ -22,7 +22,7 @@ export class ModalFoodComponent implements OnInit {
  async deleteFood (food:Food) {
    this.foodService.deleteFood(food);
    const closeModal: string = "Modal Closed";
-    await this.modalCtr.dismiss(closeModal);
+  await this.modalCtr.dismiss(closeModal);
  }
   
 
